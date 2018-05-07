@@ -1,47 +1,51 @@
 #include "heartbeat.h"
 #include <ros/ros.h>
 
-Heartbeat::Heartbeat(Synchronizer *synchronizer):_synchronizer(synchronizer),_running(false),_alive(false){
+Heartbeat::Heartbeat(Synchronizer *synchronizer):_synchronizer(synchronizer),_running(true),_alive(false){
+    _heartbeat_thread = std::thread(&Heartbeat::_timer, this);
 }
 
 Heartbeat::~Heartbeat(){
+    //stop();
 }
 
 void Heartbeat::beat(){
-    _m.lock();
-    if(!_running){   
-         _running = true;
-        _heartbeatThread = std::thread(&Heartbeat::_timer, this);
-    } else {
-        _alive = true;
-    }
-    _m.unlock();
+    std::lock_guard<std::mutex> lk(_m);
+    _alive = true;
+    _cv.notify_one();
 }
 
 void Heartbeat::_timer(){
     while(_running){
-        _m.lock();
-        _alive = false;
-        _m.unlock();
+
+        {
+            std::unique_lock<std::mutex> lk(_m);
+            while(!_alive && _running){ _cv.wait(lk); }
+            _alive = false;
+            if(!_running){ return; }
+        }
 
         ros::Duration(_sleep_time).sleep();
 
-         _m.lock();
+        _m.lock();
         if(!_alive){
-            _running = false;
+            struct Synchronizer_Event new_event;
+            new_event.event_type = Synchronizer_Event_Type::HEARTBEAT_TRIGGER;
+            new_event.argument = 1;
+            _synchronizer->addEvent(new_event);
+            #if DEBUG
+                ROS_INFO("Heartbeat trigger event sent");
+            #endif
         }
         _m.unlock();
     }
-
-    struct Synchronizer_Event new_event;
-    new_event.event_type = Synchronizer_Event_Type::HEARTBEAT_OUT;
-    new_event.argument = 1;
-    _synchronizer->addEvent(new_event);
 }
 
-void Heartbeat::stop(){
-    _m.lock();
+void Heartbeat::cleanup(){
+    {
+    std::lock_guard<std::mutex> lk(_m);
     _running = false;
-    _m.unlock();
-    _heartbeatThread.join();
+    _cv.notify_one();
+    }
+    _heartbeat_thread.join();
 }

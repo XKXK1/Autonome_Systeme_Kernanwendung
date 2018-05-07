@@ -1,5 +1,5 @@
 #include "topicPublisher.h"
-#include "std_msgs/String.h"
+#include "std_msgs/Int32.h"
 
 
 TopicPublisher::TopicPublisher(){}
@@ -7,28 +7,15 @@ TopicPublisher::~TopicPublisher(){}
 
 void TopicPublisher::setup(){
 
-    ros::NodeHandle node;
-    ros::Publisher pub = node.advertise<std_msgs::String>("heartbeat_in", 100);
-    
-    
-  ros::Rate loop_rate(10);
-  int count = 0;
-  while (count < 5)
-  {
-    std_msgs::String msg;
+  ros::NodeHandle node;
+  _heartbeat_out_publisher = node.advertise<std_msgs::Int32>("heartbeat_out", 100);
 
-    std::stringstream ss;
-    ss << "hello world " << count;
-    msg.data = ss.str();
+  //ros::spinOnce();
 
-    //ROS_INFO("%s", msg.data.c_str());
+}
 
-    pub.publish(msg);
-
-    ros::spinOnce();
-    loop_rate.sleep();
-    ++count;
-  }
-
-
+void TopicPublisher::heartbeat_out(){
+      std_msgs::Int32 msg;
+      msg.data = 1;
+      _heartbeat_out_publisher.publish(msg);
 }

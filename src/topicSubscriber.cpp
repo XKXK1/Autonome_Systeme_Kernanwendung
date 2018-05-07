@@ -14,16 +14,9 @@ void TopicSubscriber::run(){
 
 static int love = 0;
 
-void TopicSubscriber::_heartbeat_in(const std_msgs::String::ConstPtr& msg){
-    //ROS_INFO("I heard: [%s]", msg->data.c_str());
+void TopicSubscriber::_heartbeat_in(const std_msgs::Int32::ConstPtr& msg){
     struct Synchronizer_Event event;
     event.event_type = Synchronizer_Event_Type::HEARTBEAT_IN;
     event.argument = 0;
     _synchronizer->addEvent(event);
 }
-
-
-
-
-
-

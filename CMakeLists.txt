@@ -200,11 +200,19 @@ include_directories(
 # catkin_add_nosetests(test)
 
 add_compile_options(-std=c++11)
+add_compile_options(-DDEBUG=1)
 include_directories(include/guidebot)
 include_directories(include/guidebot/misc)
 
 #add_library(synchronizer src/synchronizer.cpp)
 
 add_executable(core
-  src/heartbeat.cpp src/core.cpp src/synchronizer.cpp src/topicSubscriber.cpp src/topicPublisher.cpp)
+  src/driver.cpp
+  src/checkpoint.cpp
+  src/heartbeat.cpp 
+  src/core.cpp 
+  src/synchronizer.cpp 
+  src/topicSubscriber.cpp 
+  src/topicPublisher.cpp)
+
 target_link_libraries(core ${catkin_LIBRARIES})
