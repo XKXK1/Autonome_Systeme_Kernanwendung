@@ -1,0 +1,5 @@
+{"id_node_one": 1, "id_node_two": 2, "weight": 1.0}
+{"id_node_one": 1, "id_node_two": 3, "weight": 1.0}
+{"id_node_one": 2, "id_node_two": 3, "weight": 1.0}
+{"id_node_one": 4, "id_node_two": 5, "weight": 1.0}
+{"id_node_one": 1, "id_node_two": 4, "weight": 1.0}
