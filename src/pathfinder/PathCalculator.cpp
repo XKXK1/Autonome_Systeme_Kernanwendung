@@ -1,22 +1,35 @@
 //
 // Created by Grages, Philip on 23.05.18.
 //
+#include <ros/ros.h>
 #include "PathCalculator.h"
 
-PathCalculator::PathCalculator(node_path, edge_path) : _node_path(node_path),_edge_path(edge_path){
+
+using namespace std;
+
+PathCalculator::PathCalculator(string node_path, string edge_path) : _node_path(node_path),_edge_path(edge_path){
+    JsonReader json = JsonReader(_node_path, _edge_path);
+    json.createNodeEdgeMap(_edges,_nodes);
+
+    if(_edges.size() == 0){
+        ROS_ERROR("Failed to load edges file");
+    }
+    if(_nodes.size() == 0){
+        ROS_ERROR("Failed to load node file");
+    }
 }
 vector<Checkpoint> PathCalculator::getPath(float x_position, float y_position, int id) {
-    JsonReader json = JsonReader(_node_path,_edge_path);
-    list<Edge> edges;
-    map<const int,Node> nodes;
-    json.createNodeEdgeMap(edges,nodes);
-    Node node = nodes[id];
+    Node node = _nodes[id];
 
     vector<Checkpoint> checkpoints;
-    AStar astar = AStar(edges, nodes);
+    ROS_INFO("Starting A Star algorithm");
+    AStar astar = AStar(_edges, _nodes);
+    ROS_INFO("Returning shortest path");
     list<Node>* shortestPath = astar.getShortestPath(x_position,y_position,node);
+    ROS_INFO("Building checkpoints vector");
     for(list<Node>::iterator it = shortestPath->begin(); it != shortestPath->end();++it){
-        checkpoints.push_back(Checkpoint(it->getXPosition(),it->getYPosition()));
+	    Checkpoint ncp(it->getXPosition(),it->getYPosition());
+        checkpoints.push_back(ncp);
     }
     return checkpoints;
 }

@@ -11,6 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   actionlib
   move_base_msgs
   roscpp
+  tf
 )
 
 ## System dependencies are found with CMake's conventions
@@ -203,16 +204,27 @@ add_compile_options(-std=c++11)
 add_compile_options(-DDEBUG=1)
 include_directories(include/guidebot)
 include_directories(include/guidebot/misc)
+include_directories(include/guidebot/pathfinder)
 
-#add_library(synchronizer src/synchronizer.cpp)
+set(PATHFINDER_SOURCE 
+	src/pathfinder/AStar.cpp 
+	src/pathfinder/Edge.cpp 
+	src/pathfinder/JsonReader.cpp 
+	src/pathfinder/Node.cpp 
+	src/pathfinder/PathCalculator.cpp)
 
-add_executable(core
-  src/driver.cpp
+set(CORE_SOURCE src/driver.cpp
   src/checkpoint.cpp
   src/heartbeat.cpp 
   src/core.cpp 
   src/synchronizer.cpp 
   src/topicSubscriber.cpp 
   src/topicPublisher.cpp)
+
+#add_library(synchronizer src/synchronizer.cpp)
+
+add_executable(core
+	${CORE_SOURCE}
+	${PATHFINDER_SOURCE})
 
 target_link_libraries(core ${catkin_LIBRARIES})

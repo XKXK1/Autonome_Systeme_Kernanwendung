@@ -5,23 +5,20 @@
 #ifndef A_STAR_PATHCALCULATOR_H
 #define A_STAR_PATHCALCULATOR_H
 
-#include <map>
-#include <list>
-
 #include "JsonReader.h"
-#include "Node.h"
-#include "Edge.h"
 #include "AStar.h"
+#include "../checkpoint.h"
 
-using namespace std;
 
 class PathCalculator{
 private:
-    string _edge_path;
-    string _node_path;
+    std::string _edge_path;
+    std::string _node_path;
+    std::list<Edge> _edges;
+    std::map<const int,Node> _nodes;
 public:
-    PathCalculator(node_path,edge_path);
-    vector<Checkpoint> getPath(float x_position, float y_position, int id);
+    PathCalculator(std::string node_path,std::string edge_path);
+    std::vector<Checkpoint> getPath(float x_position, float y_position, int id);
 
 };
 

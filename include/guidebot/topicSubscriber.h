@@ -17,6 +17,7 @@ private:
     
     */
     void _heartbeat_in(const std_msgs::Int32::ConstPtr& msg);
+    void _id_in(const std_msgs::Int32::ConstPtr& msg);
 
 public:
     TopicSubscriber(Synchronizer *synchronizer);

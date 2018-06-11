@@ -1,5 +1,7 @@
 #include "AStar.h"
 
+using namespace std;
+
 AStar::AStar(list<Edge> edges, map<const int, Node> nodes) :_edges(edges), _nodes(nodes) {}
 
 list<Node>* AStar::getShortestPath(float x_position, float y_position, Node destination) {

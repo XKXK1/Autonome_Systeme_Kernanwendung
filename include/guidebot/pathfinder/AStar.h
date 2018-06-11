@@ -1,4 +1,6 @@
-#pragma once
+#ifndef ASTAR_H
+#define ASTAR_H
+
 #include <list>
 #include <map>
 #include <math.h>
@@ -6,22 +8,23 @@
 #include "Edge.h"
 #include "Node.h"
 
-using namespace std;
-
 class AStar {
 private:
-	list<Edge> _edges;
-	map<const int, Node> _nodes;
+	std::list<Edge> _edges;
+	std::map<const int, Node> _nodes;
 	Node getClosestNode(float x_position, float y_position);
-	void getConnectedEdges(list<Edge>& connectedEdges, Node node);
-	bool contains(list<Edge> edges, Edge edge);
-	list<Edge> propagationThrouNodes(Node startNode, list<Edge> &openList, list<Edge> closedList, Node destination);
+	void getConnectedEdges(std::list<Edge>& connectedEdges, Node node);	
+	bool contains(std::list<Edge> edges, Edge edge);
+	std::list<Edge> propagationThrouNodes(Node startNode, std::list<Edge> &openList, std::list<Edge> closedList, Node destination);
 	float getDistance(Node node, Node destination);
-	list<Node> edgesToNodes(list<Edge> openList, Node start);
+	std::list<Node> edgesToNodes(std::list<Edge> openList, Node start);
 
 public:
-	AStar(list<Edge> edges, map<const int, Node> nodes);
-	list<Node>* getShortestPath(float x_position, float y_position, Node destination);
+	AStar(std::list<Edge> edges, std::map<const int, Node> nodes);
+	std::list<Node>* getShortestPath(float x_position, float y_position, Node destination);
 
-    bool getSmallesWeight(list<Edge> edge1, list<Edge> edge2);
+    bool getSmallesWeight(std::list<Edge> edge1, std::list<Edge> edge2);
 };
+
+
+#endif
