@@ -22,7 +22,7 @@ void TopicSubscriber::run(){
     while(node.ok()){
         tf::StampedTransform transform;
         try{
-            listener.lookupTransform("/map", "p3dx/base_link", ros::Time(0), transform);
+            listener.lookupTransform("/map", "base_link", ros::Time(0), transform);
             _synchronizer->setPosition(transform.getOrigin().x(), transform.getOrigin().y());
         }catch(tf::TransformException &ex){
             ROS_ERROR("%s", ex.what());

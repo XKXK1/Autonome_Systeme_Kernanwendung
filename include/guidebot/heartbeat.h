@@ -10,7 +10,7 @@ class Synchronizer;
 
 class Heartbeat{
 private:
-    static constexpr float _sleep_time = 0.25; //* variable used to determine the heartbeat rate
+    static constexpr float _sleep_time = 0.5; //* variable used to determine the heartbeat rate
 
     Synchronizer *_synchronizer; //* pointer to the synchronizer object
     bool _alive; //* used to keep track of heartbeats and if the timer has to be refreshed

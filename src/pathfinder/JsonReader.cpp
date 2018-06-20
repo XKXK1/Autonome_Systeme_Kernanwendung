@@ -21,8 +21,10 @@ void JsonReader::parseNodes(map<const int, Node>& nodes) {
 
 	for (std::string line; getline(inputFileStream, line);) {
 		json jsonObject = json::parse(line);
-		Node node(jsonObject["_id"], jsonObject["x_position"], jsonObject["y_position"]);
-		nodes[jsonObject["_id"]] = node;
+		Node node(jsonObject["id"], jsonObject["x_position"], jsonObject["y_position"]);
+		node.z_rotation = jsonObject["z_rotation"];
+		node.w_rotation = jsonObject["w_rotation"];
+		nodes[jsonObject["id"]] = node;
 	}
 }
 

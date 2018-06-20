@@ -63,14 +63,17 @@ void Synchronizer::_heartbeat_out_event(){
 }
 
 void Synchronizer::_select_id_event(int32_t id){
-    //_driver->stop();
+    _driver->stop();
     float x, y;
     getPosition(x, y);
     ROS_INFO("Starting path calculator");
     std::vector<Checkpoint> checkpoints = _pathCalculator->getPath(x, y, id);
     ROS_INFO("Path calculator finished");
 
-    for(int i = 0; checkpoints.size(); i++){
-        std::cout << "POS: x = " << checkpoints[i].x_position << " | y = " << checkpoints[i].y_position << std::endl;
+    std::cout << "Lenght of new vector: " << checkpoints.size() << std::endl;
+
+    for(int i = 0; i < checkpoints.size(); i++){
+        std::cout << "i: " << i << " | POS: x = " << checkpoints[i].x_position << " | y = " << checkpoints[i].y_position << std::endl;
     }
+    _driver->start(checkpoints);
 }

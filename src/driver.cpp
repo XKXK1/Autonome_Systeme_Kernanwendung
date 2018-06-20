@@ -20,12 +20,10 @@ void Driver::_run(){
             move_base_msgs::MoveBaseGoal goal;  
             goal.target_pose.header.frame_id = "map";
             goal.target_pose.header.stamp = ros::Time::now();
-            //goal.target_pose.pose.position.x = 38.3113059998;
-            //goal.target_pose.pose.position.y = -11.7478208542;
             goal.target_pose.pose.position.x = _checkpoints[_current_index].x_position;
             goal.target_pose.pose.position.y = _checkpoints[_current_index].y_position;
-            goal.target_pose.pose.orientation.w = 1.0;
-
+            goal.target_pose.pose.orientation.z = _checkpoints[_current_index].z_rotation;
+            goal.target_pose.pose.orientation.w = _checkpoints[_current_index].w_rotation;
             #if DEBUG
                 ROS_INFO("Sending goal");
             #endif
@@ -61,10 +59,11 @@ void Driver::start(std::vector<Checkpoint> checkpoints){
     if(!_in_action){
         _checkpoints = checkpoints;
         _current_index = 0;
-    }
-    #if DEBUG
+
+        #if DEBUG
         ROS_INFO("Driver started");
-    #endif
+        #endif
+    }
 }
 
 void Driver::stop(){
@@ -73,10 +72,11 @@ void Driver::stop(){
         _checkpoints.clear();
         _current_index = 0;
         _ac.cancelGoal();
-    }
-    #if DEBUG
+
+        #if DEBUG
         ROS_INFO("Driver stoped");
-    #endif
+        #endif
+    }
 }
 
 
@@ -85,10 +85,11 @@ void Driver::pause(){
     if(_in_action){
         _in_action = false;
         _ac.cancelGoal();
-    }
-    #if DEBUG
+
+        #if DEBUG
         ROS_INFO("Driver paused");
-    #endif
+        #endif
+    }
 }
 
 void Driver::resume(){
@@ -96,10 +97,11 @@ void Driver::resume(){
     if(!_in_action){
         _in_action = true;
         _cv.notify_one();
-    }
-    #if DEBUG
+
+        #if DEBUG
         ROS_INFO("Driver resumed");
-    #endif
+        #endif
+    }
 }
 
 void Driver::cleanup(){

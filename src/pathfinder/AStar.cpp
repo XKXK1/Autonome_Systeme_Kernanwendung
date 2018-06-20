@@ -1,25 +1,31 @@
 #include "AStar.h"
+#include "iostream"
+#include "ros/ros.h"
 
 using namespace std;
 
 AStar::AStar(list<Edge> edges, map<const int, Node> nodes) :_edges(edges), _nodes(nodes) {}
 
-list<Node>* AStar::getShortestPath(float x_position, float y_position, Node destination) {
+list<Node> AStar::getShortestPath(float x_position, float y_position, Node destination) {
+	cout << 1;
+	ROS_INFO("getFirstNode");
 	Node firstNode = getClosestNode(x_position, y_position);
 	list<Edge> connectedEdges;
 	list<Edge> openList;
 	list<Edge> closedList;
 	
+	ROS_INFO("Start propagation");
 	openList = propagationThrouNodes(firstNode, openList,closedList, destination);
+	ROS_INFO("Finished Propagation");
 	list<Node> return_nodes = edgesToNodes(openList,destination);
-	return &return_nodes;
+	return return_nodes;
 }
 
 list<Edge> AStar::propagationThrouNodes(Node firstNode, list<Edge> &openList, list<Edge> closedList, Node destination) {
 	closedList = openList;
 	if (firstNode.getId() != destination.getId()) {
 		list<Edge> connectedEdges;
-
+		cout<< destination.getId() << " : " << firstNode.getId();
 		getConnectedEdges(connectedEdges, firstNode);
 		if (connectedEdges.empty()) {
 			return closedList;
@@ -27,23 +33,31 @@ list<Edge> AStar::propagationThrouNodes(Node firstNode, list<Edge> &openList, li
 		for (list<Edge>::iterator it = connectedEdges.begin(); it != connectedEdges.end(); ++it) {
 			_edges.remove(*it);
 		}
+		ROS_INFO("sorting");
+		cout << connectedEdges.size();
 		connectedEdges.sort([=](Edge &a, Edge &b) {
-			Node *node1;
+			Node node1;
+			ROS_INFO("test1");
+			cout << "A Edge: (" << a.getNode1().getId() << "," << a.getNode2().getId() << ")"<< endl;
+			cout << "FirstNode: " << firstNode.getId() << endl;			
 			if (a.getNode1().getId() == firstNode.getId())
-				*node1 = a.getNode2();
+				node1 = a.getNode2();
 			else
-				*node1 = a.getNode1();
+				node1 = a.getNode1();
 
-
-			Node *node2;
+			ROS_INFO("test2");
+			Node node2;
 			if (b.getNode1().getId() == firstNode.getId())
-				*node2 = b.getNode2();
+				node2 = b.getNode2();
 			else
-				*node2 = b.getNode1();
+				node2 = b.getNode1();
 
-			return (getDistance(*node1, destination) + a.getWeight()) <
-				   (getDistance(*node2, destination) + b.getWeight());
+			ROS_INFO("test3");
+
+			return (getDistance(node1, destination) + a.getWeight()) <
+				   (getDistance(node2, destination) + b.getWeight());
 		});
+		ROS_INFO("done");
 		list<Edge> temp = openList;
 		temp.push_front(Edge(Node(), Node(), 0));
 		for (list<Edge>::iterator it = connectedEdges.begin(); it != connectedEdges.end(); ++it) {
@@ -61,6 +75,7 @@ list<Edge> AStar::propagationThrouNodes(Node firstNode, list<Edge> &openList, li
 				closedList = closedList2;
 		}
 	}
+	cout<<"throu";
 	return closedList;
 }
 

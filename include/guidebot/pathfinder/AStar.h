@@ -21,7 +21,7 @@ private:
 
 public:
 	AStar(std::list<Edge> edges, std::map<const int, Node> nodes);
-	std::list<Node>* getShortestPath(float x_position, float y_position, Node destination);
+	std::list<Node> getShortestPath(float x_position, float y_position, Node destination);
 
     bool getSmallesWeight(std::list<Edge> edge1, std::list<Edge> edge2);
 };

@@ -7,10 +7,12 @@ class Checkpoint{
     public:
     Checkpoint();
     ~Checkpoint();
-    Checkpoint(float x, float y);
+    Checkpoint(float x, float y, float z, float w);
 
     float x_position;
     float y_position;
+    float z_rotation;
+    float w_rotation;
 
 };
 

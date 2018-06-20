@@ -24,7 +24,7 @@ int main(int argc, char** argv){
   TopicPublisher pub;
   Heartbeat heartbeat(&syn);
   Driver driver(&syn);
-  PathCalculator pathCalculator("/home/campusbot/dev/p3dx_navigation/src/guidebot/res/nodes.json", "/home/campusbot/dev/p3dx_navigation/src/guidebot/res/edges.json");
+  PathCalculator pathCalculator("/home/campusbot/dev/p3dx_navigation/src/guidebot/res/nodes_foyer.json", "/home/campusbot/dev/p3dx_navigation/src/guidebot/res/edges_foyer.json");
 
   ROS_INFO("All classes have been initialized start setup");
 
